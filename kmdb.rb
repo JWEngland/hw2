@@ -94,3 +94,29 @@ puts ""
 
 # Query the cast data and loop through the results to display the cast output for each movie.
 # TODO!
+
+
+#Solutions / work listed beginning here 
+class Studio < ApplicationRecord
+    has_many :movies
+  end
+  
+  # app/models/movie.rb
+  class Movie < ApplicationRecord
+    belongs_to :studio
+    has_many :roles
+    has_many :actors, through: :roles
+  end
+  
+  # app/models/actor.rb
+  class Actor < ApplicationRecord
+    has_many :roles
+    has_many :movies, through: :roles
+  end
+  
+  # app/models/role.rb
+  class Role < ApplicationRecord
+    belongs_to :movie
+    belongs_to :actor
+  end
+  
