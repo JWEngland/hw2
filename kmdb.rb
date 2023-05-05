@@ -69,10 +69,58 @@
 
 # Delete existing data, so you'll start fresh each time this script is run.
 # Use `Model.destroy_all` code.
-# TODO!
+#TODO! kmdb.rb.destroy_all
+
 
 # Generate models and tables, according to the domain model.
 # TODO!
+
+class Studio < ActiveRecord::Base
+    has_many :movies
+  end
+  
+  class Movie < ActiveRecord::Base
+    belongs_to :studio
+    has_many :roles
+    has_many :actors, through: :roles
+  end
+  
+  class Actor < ActiveRecord::Base
+    has_many :roles
+    has_many :movies, through: :roles
+  end
+  
+  class Role < ActiveRecord::Base
+    belongs_to :movie
+    belongs_to :actor
+  end
+
+  ##############################################
+
+  #Database schema 
+  ActiveRecord::Schema.define do
+    create_table :studios do |t|
+      t.string :name
+    end
+  
+    create_table :movies do |t|
+      t.string :title
+      t.integer :year_released
+      t.string :rated
+      t.integer :studio_id
+    end
+  
+    create_table :actors do |t|
+      t.string :name
+    end
+  
+    create_table :roles do |t|
+      t.integer :movie_id
+      t.integer :actor_id
+      t.string :character_name
+    end
+  end
+
 
 # Insert data into the database that reflects the sample data shown above.
 # Do not use hard-coded foreign key IDs.
@@ -97,58 +145,3 @@ puts ""
 
 
 #Solutions / work listed beginning here 
-class Studio < ApplicationRecord
-    has_many :movies
-  end
-  
-  # app/models/movie.rb
-  class Movie < ApplicationRecord
-    belongs_to :studio
-    has_many :roles
-    has_many :actors, through: :roles
-  end
-  
-  # app/models/actor.rb
-  class Actor < ApplicationRecord
-    has_many :roles
-    has_many :movies, through: :roles
-  end
-  
-  # app/models/role.rb
-  class Role < ApplicationRecord
-    belongs_to :movie
-    belongs_to :actor
-  end
-
-  warner_bros = Studio.create(name: "Warner Bros.")
-
-batman_begins = Movie.create(title: "Batman Begins", year_released: 2005, rated: "PG-13", studio: warner_bros)
-dark_knight = Movie.create(title: "The Dark Knight", year_released: 2008, rated: "PG-13", studio: warner_bros)
-dark_knight_rises = Movie.create(title: "The Dark Knight Rises", year_released: 2012, rated: "PG-13", studio: warner_bros)
-
-christian_bale = Actor.create(name: "Christian Bale")
-michael_caine = Actor.create(name: "Michael Caine")
-liam_neeson = Actor.create(name: "Liam Neeson")
-katie_holmes = Actor.create(name: "Katie Holmes")
-gary_oldman = Actor.create(name: "Gary Oldman")
-heath_ledger = Actor.create(name: "Heath Ledger")
-aaron_eckhart = Actor.create(name: "Aaron Eckhart")
-maggie_gyllenhaal = Actor.create(name: "Maggie Gyllenhaal")
-tom_hardy = Actor.create(name: "Tom Hardy")
-joseph_gordon_levitt = Actor.create(name: "Joseph Gordon-Levitt")
-anne_hathaway = Actor.create(name: "Anne Hathaway")
-
-Role.create(movie: batman_begins, actor: christian_bale, character_name: "Bruce Wayne")
-Role.create(movie: batman_begins, actor: michael_caine, character_name: "Alfred")
-Role.create(movie: batman_begins, actor: liam_neeson, character_name: "Ra's Al Ghul")
-Role.create(movie: batman_begins, actor: katie_holmes, character_name: "Rachel Dawes")
-Role.create(movie: batman_begins, actor: gary_oldman, character_name: "Commissioner Gordon")
-
-Role.create(movie: dark_knight, actor: christian_bale, character_name: "Bruce Wayne")
-Role.create(movie: dark_knight, actor: heath_ledger, character_name: "Joker")
-Role.create(movie: dark_knight, actor: aaron_eckhart, character_name: "Harvey Dent")
-Role.create(movie: dark_knight, actor: michael_caine, character_name: "Alfred")
-Role.create(movie: dark_knight, actor: maggie_gyllenhaal, character_name: "Rachel Dawes")
-
-
-  
